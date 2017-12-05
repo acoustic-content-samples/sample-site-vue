@@ -7,6 +7,8 @@ This sample contains the Single Page Site Application implemented with vue.js in
 You can replace the default single page application with the vue.js implementations in this repository. Note that this will overlay the default Angular 4 based application with the vue.js implementation.
 See the topic on Restoring the default Angular 4 based application in case you want to switch back.
 
+![vue sample SPA](vue-spa.png)
+
 Getting started
 ------------
 These are the instructions for setting up and deploying the Vue SPA.
