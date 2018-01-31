@@ -7,14 +7,7 @@ import VueRouter from 'vue-router';
 
 import AppComponent from './app.vue';
 
-import LeadImage from './components/leadImage';
-import ArticleBodyImage from './components/articleBodyImage';
-import ShareSocial from './components/shareSocial';
-import AuthorProfile from "./components/authorProfile";
-
 import StandardPage from './pages/standardPage';
-import DesignPageLeft from './pages/designPageLeft';
-import DesignPageRight from './pages/designPageRight';
 import ErrorPage from './pages/errorPage';
 
 import {WchStore, setNavChangeFunction} from 'wch-flux-sdk';
@@ -30,16 +23,16 @@ import { configWCH } from 'wch-flux-sdk';
 // configWCH('your-domain-name.com', '0000000-0000-0000-0000-000000000000');
 
 // load components globally
-Vue.component('lead-image', LeadImage);
-Vue.component('article-body-image', ArticleBodyImage);
-Vue.component('share-social', ShareSocial);
-Vue.component('author-profile', AuthorProfile);
+Vue.component('lead-image', () => import(/* webpackChunkName: "leadImage" */ './components/leadImage'));
+Vue.component('article-body-image',  () => import(/* webpackChunkName: "articleBodyImage" */ './components/articleBodyImage'));
+Vue.component('share-social',  () => import(/* webpackChunkName: "shareSocial" */ './components/shareSocial'));
+Vue.component('author-profile',  () => import(/* webpackChunkName: "authorProfile" */ './components/authorProfile'));
 
 // load page components globally
 Vue.component('standard-page-layout', StandardPage);
 Vue.component('standard-page', StandardPage);
-Vue.component('design-page-left', DesignPageLeft);
-Vue.component('design-page-right', DesignPageRight);
+Vue.component('design-page-left',  () => import(/* webpackChunkName: "designPageLeft" */ './pages/designPageLeft'));
+Vue.component('design-page-right',  () => import(/* webpackChunkName: "designPageRight" */ './pages/designPageRight'));
 
 let possibleTenant = document.location.pathname.split('/')[1];
 console.warn('index.html: possible tenant is %o and base url is %o', possibleTenant, possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/');

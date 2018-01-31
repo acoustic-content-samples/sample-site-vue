@@ -8,6 +8,8 @@ let
     tenant = window.location.pathname.split('/')[1],
     protocol = window.location.protocol;
 
+window.WchSdk = {};
+
 let sitePromise = null;
 let siteDraftPromise = null;
 let navChangeFunc = () => {};
@@ -22,12 +24,14 @@ let subscriptions = {
 // if (window.location.hostname.includes('-preview')) {
 window.addEventListener("message", receiveMessage, false);
 
+
 subscribe('content', (action, content) => {
     if (action === 'update-content') {
     // push to server
-}
-});
+    }
+});     
 // }
+
 
 function receiveMessage (event) {
     if (event.data.type !== 'WchSdk.router.activeRoute.subscribe') {
@@ -45,7 +49,7 @@ function receiveMessage (event) {
 
             if(flag){
                 // if(loadContentDraft(event.data.id, true) === 'page');{
-                // 	flag = false;
+                //  flag = false;
                 // }
                 loadSite('default', true);
             }
@@ -54,7 +58,8 @@ function receiveMessage (event) {
         case "WchSdk.router.navigateByPath":
             navChangeFunc(event.data.path);
             break;
-        case 'WchSdk.router.activeRoute.subscribe': // worthless event
+        case 'WchSdk.router.activeRoute.subscribe':
+            window.parent.postMessage({type: 'WchSdk.router.activeRoute.subscribeResponse'}, event.origin);
             break;
         default:
             console.info('wch-flux-sdk: Unhandled event', event.data.type);
@@ -102,8 +107,7 @@ export function createDraftImageUrl(image, rendition) {
         if (image.renditions[rendition]) {
             source = image.renditions[rendition].source;
         }
-        return `https://dxcloud.rtp.raleigh.ibm.com/api${source}`;
-        // return `${protocol}//${host}/api${source}`;
+        return `${protocol}//${host}/api${source}`;
     }
     return '';
 }
@@ -284,9 +288,9 @@ export function sortQueriedItems (items, field, sortOrder, maxItemsToDisplay) {
         }
     });
 
-		/*
-		 reverse Date so the latest dates are first in the list
-		 */
+        /*
+         reverse Date so the latest dates are first in the list
+         */
         if (sortOrder === 'by date descending' || sortOrder === 'Alphabetical descending') {
             items.reverse();
         }
