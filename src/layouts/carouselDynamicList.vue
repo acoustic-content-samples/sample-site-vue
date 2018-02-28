@@ -17,6 +17,28 @@ LICENSE: Apache License, Version 2.0
 <script>
 	import {loadContent, queryContent, getQueryString, getFirstCategory, sortQueriedItems} from 'wch-flux-sdk';
 
+	const slickLoaded = new Promise((resolve, reject) => {
+		if (!document.getElementById('slick-script-tag')) {
+			let styleTag = document.createElement('link');
+			styleTag.href = '//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css';
+			styleTag.rel = 'stylesheet';
+			styleTag.async =true;
+			document.head.appendChild(styleTag);
+
+			let scriptTag = document.createElement('script');
+			scriptTag.id = 'slick-script-tag';
+			scriptTag.type = 'application/javascript';
+			scriptTag.src = '//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js';
+			scriptTag.async = true;
+			scriptTag.addEventListener('load', resolve);
+			scriptTag.addEventListener('error', () => reject('Error loading script.'));
+			scriptTag.addEventListener('abort', () => reject('Script loading aborted.'));
+			document.body.appendChild(scriptTag);
+		} else {
+			resolve();
+		}
+	});
+
 	export default {
 		data: () => ({
 
@@ -53,16 +75,18 @@ LICENSE: Apache License, Version 2.0
 			loadContent(this.contentId);
 		},
 		mounted () {
-			$('.carousel').slick(this.slickOptions);
+			slickLoaded.then(() => $('.carousel').slick(this.slickOptions));
 		},
 		watch: {
 			items () {
-				$('.carousel').slick('unslick');
-				$('.carousel').slick(this.slickOptions);
+				slickLoaded.then(() => {
+					$('.carousel').slick('unslick');
+					$('.carousel').slick(this.slickOptions);
+				});
 			}
 		},
 		beforeDestroy () {
-			$('.carousel').slick('unslick');
+			slickLoaded.then(() => $('.carousel').slick('unslick'));
 		},
 		computed: {
 			type () {

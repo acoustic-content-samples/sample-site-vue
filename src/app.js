@@ -2,6 +2,9 @@
 Copyright IBM Corporation 2017.
 LICENSE: Apache License, Version 2.0
 */
+
+import 'babel-polyfill';
+
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
@@ -13,14 +16,13 @@ import ErrorPage from './pages/errorPage';
 import {WchStore, setNavChangeFunction} from 'wch-flux-sdk';
 import {WchPage, WchContent, WchEdit} from 'wch-flux-sdk/vue';
 
-import 'script-loader!foundation-sites/dist/js/foundation.js';
-import 'styles/app.scss';
-
 Vue.use(VueRouter);
 
 // for running on local host we want to configure the WCH lib
-import { configWCH } from 'wch-flux-sdk';
+// import { configWCH } from 'wch-flux-sdk';
 // configWCH('your-domain-name.com', '0000000-0000-0000-0000-000000000000');
+
+setNavChangeFunction(path => router.push({path: path}));		// set nav change function for preview
 
 // load components globally
 Vue.component('lead-image', () => import(/* webpackChunkName: "leadImage" */ './components/leadImage'));
@@ -52,8 +54,7 @@ let router = new VueRouter({
 	]
 });
 
-// set nav change function for preview
-setNavChangeFunction(path => router.push({path: path}));
+
 document.title = 'Oslo';
 
 
