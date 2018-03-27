@@ -68,6 +68,14 @@ export function configWCH (hostname=window.location.hostname, tenantId=window.lo
 	inPreview = (host.match(/-preview\.ibm\.com/)) ? true : false;
 }
 
+export function getHost () {    
+    return host;
+}
+
+export function getTenant () {    
+    return tenant;
+}
+
 export function setNavChangeFunction (func) {
 	navChangeFunc = func;
 }
@@ -109,7 +117,7 @@ export function createDraftImageUrl(image, rendition) {
 }
 
 export function loadContent (id, force=false, onError) {
-	if (!force && WchStore.content[id] || !id) {
+	if (!force && contentPromises[id] && WchStore.content[id] || !id) {
 		return;
 	}
 
@@ -144,7 +152,7 @@ export function loadContent (id, force=false, onError) {
 }
 
 export function loadContentDraft (id, force=false, onError) {
-	if (!force && WchStore.content[id] || !id) {
+	if (!force && contentPromises[id] && WchStore.content[id] || !id) {
 		return;
 	}
 
@@ -205,7 +213,7 @@ function mapNav (pages) {
 }
 
 export function loadSite (siteName='default', force=false) {
-	if (!force && Object.keys(WchStore.site).length !== 0) {
+	if (!force && sitePromise && Object.keys(WchStore.site).length !== 0) {
 		return;
 	}
 
@@ -297,18 +305,18 @@ export function getFirstCategory (element, defaultValue='medium') {
 export function sortQueriedItems (items, field, sortOrder, maxItemsToDisplay) {
 	let itemType = (items && items[0] && items[0].elements[field]) ? items[0].elements[field].elementType : "";
 	//only sort if there is a valid field to sort on
-	if(itemType) {
+	if (itemType) {
 		items.sort((a, b) => {
 			let itemA = a.elements[field].value;
-		let itemB = b.elements[field].value;
-		switch (itemType) {
-			case 'datetime': {
-				return sortGeneric(new Date(itemA), new Date(itemB));
+			let itemB = b.elements[field].value;
+			switch (itemType) {
+				case 'datetime': {
+					return sortGeneric(new Date(itemA), new Date(itemB));
+				}
+				default: {
+					return sortGeneric(itemA, itemB);
+				}
 			}
-			default: {
-				return sortGeneric(itemA, itemB);
-			}
-		}
 	});
 
 		/*
@@ -326,8 +334,8 @@ export function sortQueriedItems (items, field, sortOrder, maxItemsToDisplay) {
 	return (items);
 }
 
-function sortGeneric(a, b){
-	if(a < b) {
+function sortGeneric (a, b) {
+	if (a < b) {
 		return -1;
 	} else if(a > b) {
 		return 1;

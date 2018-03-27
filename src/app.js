@@ -15,6 +15,7 @@ import ErrorPage from './pages/errorPage';
 
 import {WchStore, setNavChangeFunction} from 'wch-flux-sdk';
 import {WchPage, WchContent, WchEdit} from 'wch-flux-sdk/vue';
+import 'wch-flux-sdk/localStorage';
 
 Vue.use(VueRouter);
 
@@ -73,6 +74,8 @@ Vue.component('vertical-list', () => import(/* webpackChunkName: "verticalList" 
 Vue.component('sign-up', () => import(/* webpackChunkName: "signUp" */'./layouts/signUp'));
 Vue.component('event', () => import(/* webpackChunkName: "event" */'./layouts/event'));
 Vue.component('design-article', () => import(/* webpackChunkName: "designArticle" */'./layouts/designArticle'));
+Vue.component('search-results', () => import(/* webpackChunkName: "searchResults" */'./layouts/search-results/searchResultsLayout'));
+
 
 
 new Vue({

@@ -9,6 +9,7 @@ LICENSE: Apache License, Version 2.0
 				<button class="menu-icon" type="button" data-toggle="example-menu"></button>
 				<div class="logo-container hide-for-large">
 					<h1 class="logo" v-bind:style="{backgroundImage: imageUrl}"></h1>
+					<header-search></header-search>
 				</div>
 			</div>
 			<div class="top-bar" id="example-menu">
@@ -20,6 +21,7 @@ LICENSE: Apache License, Version 2.0
 				<div class="top-bar-right">
 					<header-nav></header-nav>
 				</div>
+				<header-search></header-search>
 			</div>
 		</nav>
 	</header>
@@ -30,6 +32,7 @@ LICENSE: Apache License, Version 2.0
 	import {loadContent, getImageUrl} from 'wch-flux-sdk';
 
 	import headerNav from './headerNav';
+	import Search from './search-box/search-box.vue';
 
 	const headerConfigId = '90d184ea-eb9c-4316-97a8-9d1ebc3029fc';
 
@@ -37,7 +40,8 @@ LICENSE: Apache License, Version 2.0
 		data: () => ({
 		}),
 		components: {
-			'header-nav': headerNav
+			'header-nav': headerNav,
+			'header-search': Search	
 		},
 		created () {
 			loadContent(headerConfigId);

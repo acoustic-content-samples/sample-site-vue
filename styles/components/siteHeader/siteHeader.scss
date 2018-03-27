@@ -32,3 +32,16 @@ $logo-height-medium: 80px;
 header {
 	border-bottom: 1px solid #efefef;
 }
+
+/* navigation header overrides for search */
+.top-bar .top-bar-right {
+    flex: 0 1 auto;
+    margin-left: auto;
+    padding-right: 12%;
+}
+
+.top-bar .top-bar-left {
+    flex: 1 1 auto;
+    margin-right: auto;
+    padding-left: 8%;
+}
