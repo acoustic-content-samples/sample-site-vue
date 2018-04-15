@@ -9,7 +9,7 @@ LICENSE: Apache License, Version 2.0
 		<li v-for="page of site.pages">
 			<!--<a v-bind:href="page.route">{{page.name}}</a>-->
 			<router-link v-bind:to="page.route" >{{page.name}} </router-link>
-		</li>git
+		</li>
 	</ul>
 </div>
 </template>
