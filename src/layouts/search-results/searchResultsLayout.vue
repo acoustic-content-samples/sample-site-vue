@@ -159,18 +159,20 @@ LICENSE: Apache License, Version 2.0
 				let proto = `${window.location.protocol}`;
 				let cApiUrl = `${proto}//${host}/api/${tenant}`; 				
 
-			    let apiUrl = (window.location.hostname === 'localhost') ? cApiUrl : `${window.location.protocol}//${window.location.hostname}/api/${window.location.pathname.split('/')[1]}`;
+				let apiUrl = (window.location.hostname === 'localhost') ? cApiUrl : `${window.location.protocol}//${window.location.hostname}/api/${window.location.pathname.split('/')[1]}`;
+		        let deliveryQuery = 'delivery';
+		        let textQuery = this.searchKeywords.reduce((query, currentVal,index) => {
+		          return (index === 0) ? `${currentVal}~1` : `${query} AND ${currentVal}~1`;
+		        },'');
+		        let typeQuery = this.searchTypes.reduce((types, currentVal, index) => {
+		          return (index === 0) ? `&fq=type:"${currentVal}"` : `${types} OR type:"${currentVal}"`;
+		        }, '');
 
-			    let textQuery = this.searchKeywords.reduce((query, currentVal) => `${query} AND (text:*${currentVal}* OR name:*${currentVal}*)`, '');
-			    let typeQuery = this.searchTypes.reduce((types, currentVal, index) => {
-			      return (index === 0) ? `&fq=type:"${currentVal}"` : `${types} OR type:"${currentVal}"`
-			    }, '');
-
-			    let searchURL = `${apiUrl}/delivery/v1/search?q=siteId:default`
-			      + typeQuery
-			      + `&fq={!join from=id to=aggregatedContentIds}classification:content`
-			      + textQuery
-			      + `&rows=${this.rowsPerRequest}&start=${this.start * this.rowsPerRequest}&fl=*`;
+		        let searchURL = `${apiUrl}/${deliveryQuery}/v1/search?q=classification:page`
+		          + typeQuery
+		          + `&fq={!join%20from=id%20to=aggregatedIds}`
+		          + `text:(${textQuery})`
+		          + `&rows=${this.rowsPerRequest}&start=${this.start * this.rowsPerRequest}&fl=*`;
 
 			    this.start++;	
 
