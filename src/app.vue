@@ -4,11 +4,11 @@ LICENSE: Apache License, Version 2.0
 -->
 <template>
 <div>
-	<site-header/>
+	<site-header v-if="this.$route.name !== 'preview'" />
 	<div class="content-placeholder">
 		<router-view/>
 	</div>
-	<site-footer/>
+	<site-footer v-if="this.$route.name !== 'preview'" />
 </div>
 </template>
 

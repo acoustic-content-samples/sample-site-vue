@@ -10,5 +10,5 @@ if (localContent) {
 	WchStore.site = localSite;
 }
 // subscribe to store so we can save changes
-subscribe('content', () => localStorage.setItem('WchStore.content', JSON.stringify(WchStore.content)));
-subscribe('content', () => localStorage.setItem('WchStore.site', JSON.stringify(WchStore.site)));
+subscribe('content', () => { try { localStorage.setItem('WchStore.content', JSON.stringify(WchStore.content)) } catch(e) { console.warn(`Cannot set content in localstorage: ${e.message}`) } });
+subscribe('content', () => { try { localStorage.setItem('WchStore.site', JSON.stringify(WchStore.site)) } catch(e) { console.warn(`Cannot set content in localstorage: ${e.message}`) } });

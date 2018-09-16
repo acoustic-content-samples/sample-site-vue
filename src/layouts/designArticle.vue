@@ -8,7 +8,12 @@ LICENSE: Apache License, Version 2.0
 		<design-article-summary :contentId="contentId"></design-article-summary>
 	</div>
 	<div v-if="!summary">
-		<lead-image v-if="leadImageId.length > 0" :content-id="leadImageId"></lead-image>
+		<div class="article-lead-image">
+			<div class="image-container">
+				<img :src="getLeadImageUrl(leadImage, 'lead')" :alt="leadImage.altText" :title="leadImage.altText">
+			</div>
+			<div class="caption">{{leadImageCaption}} <span>{{leadImageCredit}}</span></div>
+		</div>
 		<h2 class="headline">{{heading}}</h2>
 		<div class="article-details">
 			<div class="byline-and-date">By <b class="author">{{author}}</b>, <span>{{date}}</span>
@@ -17,10 +22,16 @@ LICENSE: Apache License, Version 2.0
 		</div>
 		<div class="article-body" v-for="(item, index) in body">
 			<div v-html="item"></div>
-			<article-body-image v-if="index < bodyImages.length" :content-id="bodyImages[index].id"></article-body-image>
+			<div :class="className(bodyImages[index])">
+				<img :src="getBodyImageUrl(bodyImages[index], getImageSize(bodyImages[index]))" :alt="getBodyAltText(bodyImages[index])" :title="getBodyAltText(bodyImages[index])">
+				<div class="caption">{{getBodyImageCaption(bodyImages[index])}} <span>{{getBodyImageCredit(bodyImages[index])}}</span></div>
+			</div>
 		</div>
 		<div class="article-medium-image" v-for="image in getLeftoverImages()">
-			<article-body-image :content-id="image.id"></article-body-image>
+			<div :class="className(image)">
+				<img :src="getBodyImageUrl(image, getImageSize(image))" :alt="getBodyAltText(image)" :title="getBodyAltText(image)">
+				<div class="caption">{{getBodyImageCaption(image)}} <span>{{getBodyImageCredit(image)}}</span></div>
+			</div>
 		</div>
 
 		<author-profile v-if="authorBioId" :content-id="authorBioId"></author-profile>
@@ -30,7 +41,7 @@ LICENSE: Apache License, Version 2.0
 
 
 <script>
-	import {loadContent} from 'wch-flux-sdk';
+	import {loadContent, getImageUrl, getFirstCategory} from 'wch-flux-sdk';
 	import AuthorProfile from '../components/authorProfile';
 	import DesignArticleSummary from '../components/designArticleSummary';
 
@@ -50,9 +61,19 @@ LICENSE: Apache License, Version 2.0
 					return this.$root.$data.content[this.contentId].elements.heading.value;
 				} return '';
 			},
-			leadImageId () {
-				if (this.$root.$data.content[this.contentId]) {
-					return this.$root.$data.content[this.contentId].elements.mainImage.value.id;
+			leadImage (){
+				if (this.$root.$data.content[this.contentId].elements.mainImage) {
+					return this.$root.$data.content[this.contentId].elements.mainImage.value.leadImage;
+				} return '';
+			},
+			leadImageCaption (){
+				if (this.$root.$data.content[this.contentId].elements.mainImage.value) {
+					return this.$root.$data.content[this.contentId].elements.mainImage.value.leadImageCaption.value;
+				} return '';
+			},
+			leadImageCredit (){
+				if (this.$root.$data.content[this.contentId].elements.mainImage) {
+					return this.$root.$data.content[this.contentId].elements.mainImage.value.leadImageCredit.value;
 				} return '';
 			},
 			author () {
@@ -84,6 +105,63 @@ LICENSE: Apache License, Version 2.0
 		methods: {
 			getLeftoverImages () {
 				return this.bodyImages.slice(this.body.length);
+			},
+			getImageSize (bodyImage) {
+				if(bodyImage) {
+					if (bodyImage.image.renditions) {
+						return getFirstCategory(bodyImage.imageSize);
+					}
+				}
+				return '';
+			},
+			getLeadImageUrl (leadImage, size) {
+				if(leadImage) {
+					return getImageUrl(leadImage, size);
+				}
+				return '';
+			},
+			getBodyImageUrl (bodyImage, size) {
+				if(bodyImage) {
+					return getImageUrl(bodyImage.image, size);
+				}
+				return '';
+			},
+			getImagePlacement (bodyImage) {
+				if(bodyImage) {
+					return getFirstCategory(bodyImage.imagePlacement);
+				}
+				return '';
+			},
+			getBodyImageCaption (bodyImage) {
+				if (bodyImage){
+					return bodyImage.imageCaption.value;
+				}
+				return '';
+			},
+			getBodyImageCredit (bodyImage) {
+				if (bodyImage){
+					return bodyImage.imageCredit.value;
+				}
+				return '';
+			},
+			getBodyAltText (bodyImage) {
+				if (bodyImage){
+					return bodyImage.image.altText;
+				}
+				return '';
+			},
+			className (bodyImage) {
+				let css = [];
+				const placement = this.getImagePlacement(bodyImage);
+				const size = this.getImageSize(bodyImage);
+				if (placement) {
+					css.push(`wrap-text-${placement}`);
+				}
+				if (size) {
+					css.push(`article-${size}-image`);
+				}
+
+				return css;
 			}
 		},
 		props: ['contentId', 'summary']
@@ -92,3 +170,4 @@ LICENSE: Apache License, Version 2.0
 
 
 <style lang="scss" src="styles/layouts/designArticle.scss" scoped></style>
+<style lang="scss" src="styles/components/leadImage.scss" scoped></style>

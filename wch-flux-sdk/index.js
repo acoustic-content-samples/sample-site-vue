@@ -124,7 +124,6 @@ export function loadContent (id, force=false, onError) {
 	// let contentApi = (inPreview) ? 'delivery/v1/rendering/context' : 'delivery/v1/content';
 	if (!contentPromises[id] || force) {
 		contentPromises[id] = fetch(`${protocol}//${host}/api/${tenant}/delivery/v1/rendering/context/${id}`, {
-			credentials: 'include'
 		}).then(res => {
 			if (!res.ok && onError) {
 				onError(res.status, res.statusText);
@@ -160,7 +159,6 @@ export function loadContentDraft (id, force=false, onError) {
 
 	if (!contentPromises[id] || force) {
 		contentPromises[id] = fetch(`${protocol}//${host}/api/${tenant}/delivery/v1/rendering/context/${id}`, {
-				credentials: 'include'
 			}).then(res => {
 				if (!res.ok && onError) {
 			onError(res.status, res.statusText);
@@ -219,7 +217,7 @@ export function loadSite (siteName='default', force=false) {
 
 	if (!sitePromise || force) {
 		sitePromise = fetch(`${protocol}//${host}/api/${tenant}/delivery/v1/rendering/sites/${siteName}`,
-				{credentials: 'include'}).then(res => res.json());
+				{}).then(res => res.json());
 	}
 
 	sitePromise.then(site => {
@@ -249,7 +247,7 @@ export function getQueryString (type, rows) {
 
 export function queryContent (type, rows) {
 	let searchQuery = getQueryString(type, rows);
-	fetch(`${protocol}//${host}/api/${tenant}/delivery/v1/search?${searchQuery}`, {credentials: 'include'}).then(res => {
+	fetch(`${protocol}//${host}/api/${tenant}/delivery/v1/search?${searchQuery}`, {}).then(res => {
 		res.json().then(results => {
 			if (results.numFound > 0) {
 				results.documents.map(item => item.document).forEach(item => {
@@ -273,16 +271,16 @@ export function getQuery (queryString) {
 	return WchStore.queries[queryString];
 }
 
-export function getImageUrl (image, rendition='default', status='ready') {
-
-	if (image) {
-		let url = image.renditions.default.url;
-
+export function getImageUrl (image, rendition='default') {
+	if (image && image.renditions) {
 		if (image.renditions[rendition]) {
-			url = image.renditions[rendition].url;
+			let url = image.renditions[rendition].url;
+      return `${protocol}//${host}${url}`;
 		}
-
-		return `${protocol}//${host}${url}`;
+    else if (image.renditions.default.url) {
+      let url = image.renditions.default.url;
+      return `${protocol}//${host}${url}`;
+    }
 	}
 	return '';
 }
@@ -290,6 +288,13 @@ export function getImageUrl (image, rendition='default', status='ready') {
 export function getVideoUrl (video) {
 	if (video) {
 		return `${protocol}//${host}${video.url}`;
+	}
+	return '';
+}
+
+export function getFileUrl (file) {
+	if (file) {
+		return `${protocol}//${host}${file.url}`;
 	}
 	return '';
 }

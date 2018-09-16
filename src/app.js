@@ -12,6 +12,7 @@ import AppComponent from './app.vue';
 
 import StandardPage from './pages/standardPage';
 import ErrorPage from './pages/errorPage';
+import PreviewComponent from './components/previewComponent';
 
 import {WchStore, setNavChangeFunction} from 'wch-flux-sdk';
 import {WchPage, WchContent, WchEdit} from 'wch-flux-sdk/vue';
@@ -20,14 +21,15 @@ import 'wch-flux-sdk/localStorage';
 Vue.use(VueRouter);
 
 // for running on local host we want to configure the WCH lib
-// import { configWCH } from 'wch-flux-sdk';
-// configWCH('your-domain-name.com', '0000000-0000-0000-0000-000000000000');
+import { configWCH } from 'wch-flux-sdk';
+import { Constants } from "./Constants";
+configWCH(Constants.DOMAIN_NAME, Constants.CONTENT_HUB_ID);
 
 setNavChangeFunction(path => router.push({path: path}));		// set nav change function for preview
 
 // load components globally
 Vue.component('lead-image', () => import(/* webpackChunkName: "leadImage" */ './components/leadImage'));
-Vue.component('article-body-image',  () => import(/* webpackChunkName: "articleBodyImage" */ './components/articleBodyImage'));
+Vue.component('preview-component',  () => import(/* webpackChunkName: "previewComponent" */ './components/previewComponent'));
 Vue.component('share-social',  () => import(/* webpackChunkName: "shareSocial" */ './components/shareSocial'));
 Vue.component('author-profile',  () => import(/* webpackChunkName: "authorProfile" */ './components/authorProfile'));
 
@@ -38,7 +40,7 @@ Vue.component('design-page-left',  () => import(/* webpackChunkName: "designPage
 Vue.component('design-page-right',  () => import(/* webpackChunkName: "designPageRight" */ './pages/designPageRight'));
 
 let possibleTenant = document.location.pathname.split('/')[1];
-console.warn('index.html: possible tenant is %o and base url is %o', possibleTenant, possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/');
+console.warn('app.js: possible tenant is %o and base url is %o', possibleTenant, possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/');
 let baseUrl = possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/';
 
 console.log("SPA framework: Vue");
@@ -50,6 +52,7 @@ let router = new VueRouter({
 	routes: [
 		{path: '/', redirect: '/home'},
 		{path: '/error', name: 'error', component: ErrorPage, props: true},
+		{path: '/component-preview', name: 'preview', component: PreviewComponent},
 		{path: '/*/*', component: WchPage},
 		{path: '/*', component: WchPage }
 	]
@@ -63,19 +66,7 @@ Vue.component('wch-content', WchContent);
 Vue.directive('wch-edit', WchEdit);
 
 // load layouts dynamically
-Vue.component('carousel-dynamic-list', () => import(/* webpackChunkName: "carouselDynamicList" */'./layouts/carouselDynamicList'));
-Vue.component('gallery-dynamic-list', () => import(/* webpackChunkName: "galeryDynamicList" */'./layouts/galleryDynamicList'));
-Vue.component('gallery-list', () => import(/* webpackChunkName: "galleryList" */'./layouts/galleryList'));
-Vue.component('view-all-button', () => import(/* webpackChunkName: "viewAllButton" */'./components/viewAllButton'));
-Vue.component('hero-image', () => import(/* webpackChunkName: "heroImage" */'./layouts/heroImage'));
-Vue.component('hero-video', () => import(/* webpackChunkName: "heroVideo" */'./layouts/heroVideo'));
-Vue.component('feature', () => import(/* webpackChunkName: "feature" */'./layouts/feature'));
-Vue.component('vertical-list', () => import(/* webpackChunkName: "verticalList" */'./layouts/verticalList'));
-Vue.component('sign-up', () => import(/* webpackChunkName: "signUp" */'./layouts/signUp'));
-Vue.component('event', () => import(/* webpackChunkName: "event" */'./layouts/event'));
-Vue.component('design-article', () => import(/* webpackChunkName: "designArticle" */'./layouts/designArticle'));
-Vue.component('search-results', () => import(/* webpackChunkName: "searchResults" */'./layouts/search-results/searchResultsLayout'));
-
+import './registration';
 
 
 new Vue({

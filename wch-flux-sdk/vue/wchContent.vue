@@ -12,7 +12,9 @@ import {getContent, loadContent} from '../';
 export default {
 	computed: {
 		type () {
-			if (this.$root.$data.content[this.id]) {
+			if (this.layoutId) {
+				return this.layoutId;
+			} else if (this.$root.$data.content[this.id]) {
 				return (this.$root.$data.content[this.id].selectedLayouts) ? this.$root.$data.content[this.id].selectedLayouts[0].layout.id.replace('-layout','') : this.$root.$data.content[this.id].type.toLowerCase().replace(' ', '-');
 			}
 			return '';
@@ -23,6 +25,7 @@ export default {
 	},
 	props: {
 		id: {required: true},
+		layoutId: String,
 		props: {required: false}
 	}
 }

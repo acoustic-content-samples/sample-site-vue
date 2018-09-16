@@ -19,12 +19,40 @@ These are the instructions for setting up and deploying the Vue SPA.
 Running Locally
 -------
 1. After cloning this repository, run `npm install` at the root directory.
-2. In **src/app.js**, uncomment the line `configWCH('your-domain-name.com', '0000000-0000-0000-0000-000000000000');` and replace with your domain and content hub ID
+2. In **src/Constants.js**, replace the following two values with the corresponding values from WCH Hub information modal. (User display name > Hub information)
+    ```
+    DOMAIN_NAME: 'your-domain-name.com'
+    CONTENT_HUB_ID: '0000000-0000-0000-0000-000000000000'
+    ```
 3. Make sure that CORS is enabled on your Watson Content Hub tenant to allow localhost.
 4. Start the local server:
-   * From the root directory, run `npm start`.
+   * From within the root directory, run `npm start`.
    * The SPA will be rendered at: http://localhost:4201
-   
+
+Layout gallery layout tools
+-------------
+Use the `npm run start-dev-tools` command to load the developer tools UI. Read more [here](https://www.npmjs.com/package/wch-site-developer-tools).
+
+![developer tools UI](https://github.com/ibm-wch/wch-site-application/blob/master/doc/images/componentGallery.png)
+
+
+CLI Layout Generation
+-------------
+Example usage to add CONTENT-TYPE-NAME:
+
+1. create a CONTENT-TYPE-NAME content type on wch
+
+2. run `npm run create-layout -- --type "CONTENT-TYPE-NAME"`
+
+   the npm command simply runs the following:
+- `wchtools pull -tlmIv --dir src/wchLayouts` which pulls the layout info (layout, layout-mapping, and type json files)  
+- `ibm-wch-sdk-cli create layout --data src/wchLayouts --scss --vue --src . "--type" "CONTENT-TYPE-NAME"` which creates the CONTENT-TYPE-NAME layout files (layout and layout-mapping json files, boilerplate vue template, blank scss file, and updated registration.js for Vue.Component() calls)
+
+3. push the layout and layout-mapping json files: `wchtools push -tlmIv --dir src/wchLayouts` (perhaps I should add this to either the create-layout command or build-deploy, imo it should be in create-layout, but angular repo has the behavior in build-deploy)
+
+4. make any customizations to the vue/scss and then `npm run build-deploy`
+
+5. add desired content on wch
    
 Deploying to Content Hub
 -------
@@ -32,7 +60,7 @@ Deploying to Content Hub
 Windows: npm install -g wchtools-cli
 Linux/Mac: sudo npm install -g wchtools-cli 
    * Note: make sure that you have initialized wchtools with your user and tenant API URL. You will be prompted for your user password when deploying to the tenant. For more information, refer to [wchtools-cli](https://github.com/ibm-wch/wchtools-cli).
-2. In case you updated **src/app.jsx** with the tenant information for running locally comment the change again.
+2. In case you updated **src/Constants.js** with the tenant information for running locally comment the change again.
 3. From the root directory, run `npm run build` and `npm run deploy`.
 
 
@@ -87,7 +115,7 @@ To verify if the site is running the React or Vue SPA, load the live site and se
 
 Limitations
 -------------
-* No CLI layout generation supported for new content types. Layouts need to be created manually.
+* CLI layout generation does not support the 'multiple' option for elements.
 * Focus was on rendering. Draft content may not always render in preview. If draft content does not appear automatically, try refreshing the site preview.
 
 
