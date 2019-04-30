@@ -113,10 +113,12 @@ To verify if the site is running the React or Vue SPA, load the live site and se
 "SPA framework". 
 
 
-Limitations
+Limitations and Disclaimers
 -------------
-* CLI layout generation does not support the 'multiple' option for elements.
-* Focus was on rendering. Draft content may not always render in preview. If draft content does not appear automatically, try refreshing the site preview.
+* This sample is intended primarily to demonstrate how the Content Hub delivery APIs can be used with any SPA framework.
+* This SPA sample and the small Flux SDK it uses are available as-is and do not necessarily represent recommended coding best practices. Also note that this sample may not be updated to use the latest versions dependency libraries.
+* The focus of this sample is on rendering. Draft content may not always render correctly in preview. If draft content does not appear automatically, try refreshing the site preview.
+* The CLI layout generation tool does not support the 'multiple' option for elements.
 
 
 Restoring the default Angular based application
