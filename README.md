@@ -24,8 +24,12 @@ Running Locally
     DOMAIN_NAME: 'your-domain-name.com'
     CONTENT_HUB_ID: '0000000-0000-0000-0000-000000000000'
     ```
-3. Make sure that CORS is enabled on your Watson Content Hub tenant to allow localhost.
-4. Start the local server:
+3. In src/Constants.js, replace the siteID with the corresponding value from Website > YOUR SITE NAME > Detail button(->) > ID. The default siteID is default.
+   ```
+   SITE_ID: 'default'
+   ```
+4. Make sure that CORS is enabled on your Watson Content Hub tenant to allow localhost.
+5. Start the local server:
    * From within the root directory, run `npm start`.
    * The SPA will be rendered at: http://localhost:4201
 

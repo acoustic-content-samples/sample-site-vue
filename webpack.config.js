@@ -1,6 +1,6 @@
 const
 	HtmlWebpackPlugin = require('html-webpack-plugin'),
-	BabelMinifyPlugin = require('babel-minify-webpack-plugin'),
+	TerserPlugin = require('terser-webpack-plugin'),
 	ExtractTextPlugin = require('extract-text-webpack-plugin'),
 	path = require('path'),
 	webpack = require('webpack');
@@ -42,6 +42,40 @@ module.exports = {
 		filename: '[name].js',
 		chunkFilename: '[name].js'
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendors: {
+					test: /node_modules/,
+					name: 'vendors',
+					enforce: true,
+					chunks: 'all',
+				},
+			},
+		},
+		minimizer: [
+			new TerserPlugin({
+				cache: true,
+				parallel: true,
+				sourceMap: true, // Must be set to true if using source-maps in production
+				terserOptions: {
+					ecma: undefined,
+					warnings: false,
+					parse: {},
+					compress: {},
+					mangle: true, // Note `mangle.properties` is `false` by default.
+					module: false,
+					output: null,
+					toplevel: false,
+					nameCache: null,
+					ie8: true,
+					keep_classnames: undefined,
+					keep_fnames: false,
+					safari10: true,
+				},
+			}),
+		],
+	},
 	plugins: [
 		new webpack.DefinePlugin({
 			"process.env": {
@@ -49,20 +83,14 @@ module.exports = {
 				NODE_ENV: JSON.stringify("production")
 			}
 		}),
-		new BabelMinifyPlugin(),
 		new ExtractTextPlugin("[name].css"),
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, 'src/index.html')
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			name: 'vendors',
-			minChunks: module => { return module.context && module.context.indexOf('node_modules') !== -1; }
 		}),
 		new webpack.NoEmitOnErrorsPlugin()
 	],
 	resolve: {
 		alias: {
-			'wch-flux-sdk': path.resolve(__dirname, './wch-flux-sdk'),
 			'styles': path.resolve(__dirname, './styles')
 		},
 		extensions: [ '.js', '.vue', '.scss' ]
@@ -71,5 +99,5 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist/assets'),
         "historyApiFallback": true,
         "https": false
-    }
+	}
 };

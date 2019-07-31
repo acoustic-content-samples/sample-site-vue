@@ -42,7 +42,7 @@ LICENSE: Apache License, Version 2.0
 </template>
 
 <script>
-	import {loadSite, getHost, getTenant, loadContent, queryContent, getQueryString, getFirstCategory, sortQueriedItems} from 'wch-flux-sdk';
+	import {loadSite, loadContent, queryContent, getQueryString, getFirstCategory, sortQueriedItems, getApiUrl} from 'wch-flux-sdk';
 
 	const lucene = require('lucene-query-string-builder');
 	import * as _ from 'lodash';
@@ -154,13 +154,7 @@ LICENSE: Apache License, Version 2.0
 			    }
 			},
 			_search() {
-				let host = getHost();
-				let tenant = getTenant();
-				let proto = `${window.location.protocol}`;
-				let cApiUrl = `${proto}//${host}/api/${tenant}`; 				
-
-				let apiUrl = (window.location.hostname === 'localhost') ? cApiUrl : `${window.location.protocol}//${window.location.hostname}/api/${window.location.pathname.split('/')[1]}`;
-		        let deliveryQuery = 'delivery';
+				let apiUrl = getApiUrl();
 		        let textQuery = this.searchKeywords.reduce((query, currentVal,index) => {
 		          return (index === 0) ? `${currentVal}~1` : `${query} AND ${currentVal}~1`;
 		        },'');
@@ -168,7 +162,7 @@ LICENSE: Apache License, Version 2.0
 		          return (index === 0) ? `&fq=type:"${currentVal}"` : `${types} OR type:"${currentVal}"`;
 		        }, '');
 
-		        let searchURL = `${apiUrl}/${deliveryQuery}/v1/search?q=classification:page`
+		        let searchURL = `${apiUrl}/delivery/v1/search?q=classification:page`
 		          + typeQuery
 		          + `&fq={!join%20from=id%20to=aggregatedIds}`
 		          + `text:(${textQuery})`

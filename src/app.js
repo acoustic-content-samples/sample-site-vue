@@ -10,7 +10,12 @@ import VueRouter from 'vue-router';
 
 import AppComponent from './app.vue';
 
+import AllTypesPage from './pages/allTypesPage';
+import AllTypesPageHero2Blocks from './pages/allTypesPageHero2Blocks';
+import AllTypesPageHero4Blocks from './pages/allTypesPageHero4Blocks';
 import StandardPage from './pages/standardPage';
+import StandardPageHero2Blocks from './pages/standardPageHero2Blocks';
+import StandardPageHero4Blocks from './pages/standardPageHero4Blocks';
 import ErrorPage from './pages/errorPage';
 import PreviewComponent from './components/previewComponent';
 
@@ -21,9 +26,9 @@ import 'wch-flux-sdk/localStorage';
 Vue.use(VueRouter);
 
 // for running on local host we want to configure the WCH lib
-import { configWCH } from 'wch-flux-sdk';
+import { configWCH, getBaseUrl } from 'wch-flux-sdk';
 import { Constants } from "./Constants";
-configWCH(Constants.DOMAIN_NAME, Constants.CONTENT_HUB_ID);
+configWCH(Constants.DOMAIN_NAME, Constants.CONTENT_HUB_ID, Constants.SITE_ID);
 
 setNavChangeFunction(path => router.push({path: path}));		// set nav change function for preview
 
@@ -34,21 +39,22 @@ Vue.component('share-social',  () => import(/* webpackChunkName: "shareSocial" *
 Vue.component('author-profile',  () => import(/* webpackChunkName: "authorProfile" */ './components/authorProfile'));
 
 // load page components globally
+Vue.component('all-types-page-layout', AllTypesPage);
+Vue.component('all-types-page-hero-2-blocks', AllTypesPageHero2Blocks);
+Vue.component('all-types-page-hero-4-blocks', AllTypesPageHero4Blocks);
 Vue.component('standard-page-layout', StandardPage);
 Vue.component('standard-page', StandardPage);
+Vue.component('standard-page-hero-2-blocks', StandardPageHero2Blocks);
+Vue.component('standard-page-hero-4-blocks', StandardPageHero4Blocks);
 Vue.component('design-page-left',  () => import(/* webpackChunkName: "designPageLeft" */ './pages/designPageLeft'));
 Vue.component('design-page-right',  () => import(/* webpackChunkName: "designPageRight" */ './pages/designPageRight'));
-
-let possibleTenant = document.location.pathname.split('/')[1];
-console.warn('app.js: possible tenant is %o and base url is %o', possibleTenant, possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/');
-let baseUrl = possibleTenant.search(/\w{8}\-\w{4}\-\w{4}\-\w{4}\-\w{12}/) === 0 ? '/' + possibleTenant + '/' : '/';
 
 console.log("SPA framework: Vue");
 
 // configure the router
 let router = new VueRouter({
     mode: 'history',
-	base: baseUrl,
+	base: getBaseUrl(),
 	routes: [
 		{path: '/', redirect: '/home'},
 		{path: '/error', name: 'error', component: ErrorPage, props: true},
