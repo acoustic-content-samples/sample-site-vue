@@ -1,7 +1,7 @@
 sample-site-vue
 ==============
 
-As part of the Sites feature a single page application was implemented in WCH to serve web sites. The Single Page Application is hosted on WCH and stored as unmanaged assets. It leverages a set of content types, pages, categories, ... to render the Oslo sample application. The default single page application was implemented with Angular. The artifacts stored in WCH for Oslo are independent of the single page application. 
+As part of the Acoustic Content (formerly Watson Content Hub or WCH) sites feature a single page application is implemented to serve web sites. The Single Page Application is hosted on Acoustic Content and is stored as unmanaged assets. It leverages a set of content types, pages, categories, ... to render the Oslo sample application. The default single page application was implemented with Angular. The artifacts stored in WCH for Oslo are independent of the single page application. 
 This sample contains the Single Page Site Application implemented with vue.js instead of the default angular site application. You can find more information about the default site application implemented with angular here: 
 [Angular site application](https://github.com/ibm-wch/wch-site-application/).
 You can replace the default single page application with the vue.js implementations in this repository. Note that this will overlay the default Angular based application with the vue.js implementation.
