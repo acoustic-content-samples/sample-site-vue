@@ -120,7 +120,7 @@ To verify if the site is running the React or Vue SPA, load the live site and se
 Limitations and Disclaimers
 -------------
 * This sample is intended primarily to demonstrate how the Content Hub delivery APIs can be used with any SPA framework.
-* This SPA sample and the small Flux SDK it uses are available as-is and do not necessarily represent recommended coding best practices. Also note that this sample may not be updated to use the latest versions dependency libraries.
+* This SPA sample and the small Flux SDK (https://github.com/acoustic-content-samples/wch-flux-sdk) it uses are available as-is and do not necessarily represent recommended coding best practices. Also note that this sample may not be updated to use the latest versions dependency libraries.
 * The focus of this sample is on rendering. Draft content may not always render correctly in preview. If draft content does not appear automatically, try refreshing the site preview.
 * The CLI layout generation tool does not support the 'multiple' option for elements.
 
