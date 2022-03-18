@@ -6,6 +6,7 @@ const
 	webpack = require('webpack');
 
 module.exports = {
+	mode: 'development',
 	entry: {
 		main: [path.resolve(__dirname, 'src/app.js')]
 	},
@@ -77,23 +78,17 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new webpack.DefinePlugin({
-			"process.env": {
-				BROWSER: JSON.stringify(true),
-				NODE_ENV: JSON.stringify("production")
-			}
-		}),
 		new ExtractTextPlugin("[name].css"),
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, 'src/index.html')
 		}),
-		new webpack.NoEmitOnErrorsPlugin()
 	],
 	resolve: {
 		alias: {
 			'styles': path.resolve(__dirname, './styles')
 		},
-		extensions: [ '.js', '.vue', '.scss' ]
+		extensions: [ '.js', '.vue', '.scss' ],
+		modules: ['node_modules', 'node_modules/@acoustic-content-sdk'],
 	},
     "devServer": {
         contentBase: path.join(__dirname, 'dist/assets'),

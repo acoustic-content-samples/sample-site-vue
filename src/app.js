@@ -3,7 +3,8 @@ Copyright IBM Corporation 2017.
 LICENSE: Apache License, Version 2.0
 */
 
-import 'babel-polyfill';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
